@@ -23,11 +23,11 @@ fun main() {
     println("Days with length 6:")
     weekdays.filter { it.length == 6 }.forEach { println(it) }
 
-    println("Prime numbers from "+x+" to "+ y)
-    for (x in 1 ..y){
-        if(isPrime(x))
+    println("Prime numbers from "+1+" to "+ y)
+   for (i in 1..y) {
+        if(isPrime(i))
         {
-            println("prime:" + x)
+            println("prime:" + i)
         }
     }
 
@@ -40,10 +40,10 @@ fun main() {
     println("Decoded Message: $decodedMessage")
 
 
-    val numbers = listOf(1,2,3,4,5,6,7,8,9,10);
+    val numbers = listOf(1,2,3,4,5,6,7,8,9,10)
     printEvenNumbers(numbers)
 
-    val doubledNumbers = numbers.map{ it * 2 };
+    val doubledNumbers = numbers.map{ it * 2 }
     println(doubledNumbers)
 
     val capitalizedDays = weekdays.map { it.uppercase() }
@@ -154,9 +154,9 @@ fun groupAnagrams(strs: Array<String>): List<List<String>> {
 
     for (str in strs) {
         // Convert to lowercase for case-insensitivity
-        val sortedStr = str.toLowerCase().toCharArray().sorted().joinToString("")
+        val sortedStr = str.lowercase().toCharArray().sorted().joinToString("")
         // Add the word to the corresponding anagram group
-        map.computeIfAbsent(sortedStr) { mutableListOf() }.add(str.toLowerCase())
+        map.computeIfAbsent(sortedStr) { mutableListOf() }.add(str.lowercase())
     }
 
     return map.values.toList()
