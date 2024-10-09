@@ -3,7 +3,7 @@ import java.util.*
 enum class DictionaryType {
     HASH_SET,
     TREE_SET,
-    ARRAY_LIST
+    LIST
 
 }
 fun main() {
