@@ -6,6 +6,7 @@ enum class DictionaryType {
     LIST
 
 }
+
 fun main() {
     /*val dict: IDictionary = HashSetDictionary()
     dict.add("asd")
