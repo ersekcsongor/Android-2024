@@ -77,6 +77,13 @@ fun main() {
     val sortedDatesCustom = randomDateS.sortedWith(customComparator)
     println("Custom sort:")
     randomDateS.forEach{ println(it) }
+
+
+    val textGenerator: TextGenerator = TextGenerator()
+    textGenerator.trainFromText("Now is not the time for sleep, now is the time for party!")
+    for (i in 2..10){
+        println(textGenerator.generate("Now is", i))
+    }
 }
 
 
