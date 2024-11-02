@@ -3,6 +3,7 @@ package com.tasty.recipesapp
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.HandlerThread
 import android.os.Looper
 import android.widget.Button
 import android.widget.EditText
@@ -19,10 +20,16 @@ class SplashActivity : AppCompatActivity() {
         val binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Delay for 2 seconds and then start MainActivity
-        Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, MainActivity::class.java))
-            finish() // Close SplashActivity so it’s not in the back stack
-        }, 2000) // 2000 milliseconds = 2 seconds
+        // Use a HandlerThread to create a background thread
+        val handlerThread = HandlerThread("SplashHandlerThread", -10)
+        handlerThread.start() // Create a Handler on the new HandlerThread
+        val handler = Handler(handlerThread.looper)
+        handler.postDelayed({
+        // Navigate to MainActivity after the delay
+            val intent = Intent(this@SplashActivity, MainActivity::class.java)
+            startActivity(intent)
+            finish() },
+            2000)
+
     }
 }

@@ -15,8 +15,5 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Retrieve the message from the intent and display it in the TextView
-        val message = intent.getStringExtra("message")
-        binding.textView.text = message
     }
 }
