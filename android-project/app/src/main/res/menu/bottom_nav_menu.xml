@@ -1,15 +1,14 @@
-<!-- res/menu/bottom_nav_menu.xml -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/nav_recipes"
-        android:icon="@drawable/ic_recipes"
-        android:title="Recipes" />
+        android:id="@+id/homeFragment"
+        android:title="@string/title_home"
+        android:icon="@drawable/ic_home" />
     <item
-        android:id="@+id/nav_favorites"
-        android:icon="@drawable/ic_favorites"
-        android:title="Favorites" />
+        android:id="@+id/recipesFragment"
+        android:title="@string/title_recipes"
+        android:icon="@drawable/ic_recipes" />
     <item
-        android:id="@+id/nav_profile"
-        android:icon="@drawable/ic_profile"
-        android:title="Profile" />
+        android:id="@+id/profileFragment"
+        android:title="@string/title_profile"
+        android:icon="@drawable/ic_profile2" />
 </menu>

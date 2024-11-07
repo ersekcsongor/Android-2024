@@ -13,9 +13,8 @@
         android:theme="@style/Theme.RecipesApp"
         tools:targetApi="35">
 
-        <!-- SplashActivity is set as the launcher activity -->
         <activity
-            android:name=".SplashActivity"
+            android:name=".activities.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,7 +23,7 @@
         </activity>
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:exported="true" />
 
     </application>
