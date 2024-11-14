@@ -7,3 +7,10 @@ data class InstructionDTO(
     val displayText: String,
     val position: Int
 )
+fun InstructionDTO.toModel(): Instruction {
+    return Instruction(
+        id = this.instructionID,
+        text = this.displayText,
+        position = this.position
+    )
+}

@@ -1,19 +1,22 @@
-package com.tasty.recipesapp.repository
+package com.tasty.recipesapp.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.tasty.recipesapp.dtos.RecipeDTO
+import androidx.lifecycle.viewModelScope
 import com.tasty.recipesapp.models.Recipe
+import com.tasty.recipesapp.repository.RecipeRepository
+import kotlinx.coroutines.launch
 
-class RecipeViewModel : ViewModel() {
-    private val repository = RecipeRepository()
+class RecipeListViewModel(private val repository: RecipeRepository) : ViewModel() {
 
-    private val _recipes = MutableLiveData<List<Recipe>>()
-    val recipes: LiveData<List<Recipe>> get() = _recipes
+    private val _recipeList = MutableLiveData<List<Recipe>>()
+    val recipeList: LiveData<List<Recipe>> get() = _recipeList
 
-    // Method to load recipes
-    fun loadRecipes(recipeDTOs: List<RecipeDTO>) {
-        _recipes.value = repository.getRecipes(recipeDTOs)
+    // Fetch data from the repository asynchronously
+    fun fetchRecipeData() {
+        viewModelScope.launch {
+            _recipeList.value = repository.getRecipes()
+        }
     }
 }
