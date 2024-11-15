@@ -44,8 +44,6 @@ class RecipeDetailFragment : Fragment() {
             recipe?.let {
                 binding.recipeName.text = it.name
                 binding.recipeDescription.text = it.description
-                binding.recipeServings.text = "Servings: ${it.numServings}"
-                binding.recipeCountry.text = "Country: ${it.country}"
 
                 Glide.with(this).load(it.thumbnailUrl).into(binding.recipeThumbnail)
 

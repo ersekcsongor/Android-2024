@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.tasty.recipesapp.R
 import com.tasty.recipesapp.databinding.FragmentProfileBinding
 import com.tasty.recipesapp.models.Recipe
 import com.tasty.recipesapp.ui.recipe.RecipeAdapter
@@ -62,6 +65,10 @@ class ProfileFragment : Fragment() {
     }
 
     private fun navigateToRecipeDetail(recipe: Recipe) {
-        // Navigation logic to the recipe detail screen
+        // Pass the recipe ID to the detail fragment
+        findNavController().navigate(
+            R.id.action_profileFragment_to_recipeDetailFragment,
+            bundleOf("recipeId" to recipe.id)
+        )
     }
 }
