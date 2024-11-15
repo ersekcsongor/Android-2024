@@ -33,15 +33,12 @@ class RecipeDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize RecipeRepository and RecipeDetailViewModel
         val repository = RecipeRepository(requireContext())
         recipeDetailViewModel = ViewModelProvider(this, RecipeDetailViewModelFactory(repository))
             .get(RecipeDetailViewModel::class.java)
 
-        // Get recipeId from arguments
         val recipeId = arguments?.getInt("recipeId") ?: return
 
-        // Observe recipe details
         recipeDetailViewModel.fetchRecipeDetail(recipeId)
         recipeDetailViewModel.recipeDetail.observe(viewLifecycleOwner) { recipe ->
             recipe?.let {
@@ -52,26 +49,22 @@ class RecipeDetailFragment : Fragment() {
 
                 Glide.with(this).load(it.thumbnailUrl).into(binding.recipeThumbnail)
 
-                // Set up VideoView to play the video
                 val videoView: VideoView = binding.recipeVideoView
                 val videoUrl = it.originalVideoUrl
                 if (videoUrl.isNotEmpty()) {
-                    // Set the MediaController for play/pause controls
                     val mediaController = MediaController(requireContext())
                     mediaController.setAnchorView(videoView)
 
                     videoView.setMediaController(mediaController)
                     videoView.setVideoPath(videoUrl)
 
-                    // Start video automatically
                     videoView.start()
                 }
             }
         }
 
-        // Back button click listener
         binding.backButton.setOnClickListener {
-            findNavController().navigateUp() // This will navigate back to the previous fragment (RecipeFragment)
+            findNavController().navigateUp()
         }
     }
 

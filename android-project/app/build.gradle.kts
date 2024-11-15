@@ -52,5 +52,6 @@ dependencies {
     implementation ("com.google.code.gson:gson:2.8.9")
     implementation ("com.github.bumptech.glide:glide:4.15.1")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
+    implementation ("com.sprylab.android.texturevideoview:texturevideoview:1.1.1")
 
 }
