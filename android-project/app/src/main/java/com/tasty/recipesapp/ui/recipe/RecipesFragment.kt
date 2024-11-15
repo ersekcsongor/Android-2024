@@ -1,41 +1,60 @@
 package com.tasty.recipesapp.ui.recipe
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import com.tasty.recipesapp.R
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.tasty.recipesapp.databinding.FragmentRecipesBinding
+import com.tasty.recipesapp.models.Recipe
 import com.tasty.recipesapp.viewmodel.RecipeListViewModel
 import com.tasty.recipesapp.viewmodel.RecipeListViewModelFactory
 
 class RecipesFragment : Fragment() {
 
-    private val viewModel: RecipeListViewModel by viewModels {
+    private var _binding: FragmentRecipesBinding? = null
+    private val binding get() = _binding!!
+
+    private val recipeViewModel: RecipeListViewModel by viewModels {
         RecipeListViewModelFactory(requireContext())
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_recipes, container, false)
+    ): View {
+        _binding = FragmentRecipesBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        // Fetch data when the view is created
-        viewModel.fetchRecipeData()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        // Observe the LiveData and log the recipe details
-        viewModel.recipeList.observe(viewLifecycleOwner, Observer { recipes ->
-            recipes.forEach { recipe ->
-                Log.d("RecipeData", "Recipe ID: ${recipe.id}")
-                Log.d("RecipeData", "Recipe Name: ${recipe.name}")
-                Log.d("RecipeData", "Recipe Description: ${recipe.description}")
-            }
-        })
+        // Set up RecyclerView
+        binding.recipeRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        return view
+        // Observe recipe list from ViewModel
+        recipeViewModel.recipeList.observe(viewLifecycleOwner) { recipes ->
+            val recipeAdapter = RecipeAdapter(
+                recipes,
+                onItemClick = { recipe -> navigateToRecipeDetail(recipe) },
+                onDetailsClick = { recipe -> navigateToRecipeDetail(recipe) }
+            )
+            binding.recipeRecyclerView.adapter = recipeAdapter
+        }
+
+        // Fetch data
+        recipeViewModel.fetchRecipeData()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun navigateToRecipeDetail(recipe: Recipe) {
+        // Navigation logic
     }
 }
