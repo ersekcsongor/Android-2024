@@ -16,6 +16,11 @@ class RecipeRepository(private val context: Context) {
         return Gson().fromJson(json, type)
     }
 
+    // Add this method to RecipeRepository
+    fun getRecipeById(recipeId: Int): Recipe? {
+        return getRecipes().find { it.id == recipeId }
+    }
+
     // Fetch recipes as model objects
     fun getRecipes(): List<Recipe> {
         return loadRecipesFromJson().map { it.toModel() }

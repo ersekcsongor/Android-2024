@@ -1,60 +1,82 @@
 package com.tasty.recipesapp.ui.recipe
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.tasty.recipesapp.R
+import android.widget.MediaController
+import android.widget.VideoView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.tasty.recipesapp.databinding.FragmentRecipeDetailBinding
+import com.tasty.recipesapp.repository.RecipeRepository
+import com.tasty.recipesapp.viewmodel.RecipeDetailViewModel
+import com.tasty.recipesapp.viewmodel.RecipeDetailViewModelFactory
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [RecipeDetailFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class RecipeDetailFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var _binding: FragmentRecipeDetailBinding? = null
+    private val binding get() = _binding!!
+
+    private lateinit var recipeDetailViewModel: RecipeDetailViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_recipe_detail, container, false)
+    ): View {
+        _binding = FragmentRecipeDetailBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment RecipeDetailFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            RecipeDetailFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Initialize RecipeRepository and RecipeDetailViewModel
+        val repository = RecipeRepository(requireContext())
+        recipeDetailViewModel = ViewModelProvider(this, RecipeDetailViewModelFactory(repository))
+            .get(RecipeDetailViewModel::class.java)
+
+        // Get recipeId from arguments
+        val recipeId = arguments?.getInt("recipeId") ?: return
+
+        // Observe recipe details
+        recipeDetailViewModel.fetchRecipeDetail(recipeId)
+        recipeDetailViewModel.recipeDetail.observe(viewLifecycleOwner) { recipe ->
+            recipe?.let {
+                binding.recipeName.text = it.name
+                binding.recipeDescription.text = it.description
+                binding.recipeServings.text = "Servings: ${it.numServings}"
+                binding.recipeCountry.text = "Country: ${it.country}"
+
+                Glide.with(this).load(it.thumbnailUrl).into(binding.recipeThumbnail)
+
+                // Set up VideoView to play the video
+                val videoView: VideoView = binding.recipeVideoView
+                val videoUrl = it.originalVideoUrl
+                if (videoUrl.isNotEmpty()) {
+                    // Set the MediaController for play/pause controls
+                    val mediaController = MediaController(requireContext())
+                    mediaController.setAnchorView(videoView)
+
+                    videoView.setMediaController(mediaController)
+                    videoView.setVideoPath(videoUrl)
+
+                    // Start video automatically
+                    videoView.start()
                 }
             }
+        }
+
+        // Back button click listener
+        binding.backButton.setOnClickListener {
+            findNavController().navigateUp() // This will navigate back to the previous fragment (RecipeFragment)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
