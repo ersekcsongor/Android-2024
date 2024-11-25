@@ -40,8 +40,8 @@ fun RecipeDTO.toModel(): Recipe {
         originalVideoUrl = this.originalVideoUrl,
         country = this.country,
         numServings = this.numServings,
-        components = this.components.map { it.toModel() }, // Convert ComponentDTO to Component
-        instructions = this.instructions.map { it.toModel() }, // Convert InstructionDTO to Instruction
+        components = this.components ,// Convert ComponentDTO to Component
+        instructions = this.instructions, // Convert InstructionDTO to Instruction
         nutrition = this.nutrition?.toModel() // Convert NutritionDTO to Nutrition
 
 

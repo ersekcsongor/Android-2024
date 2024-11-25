@@ -12,7 +12,7 @@ data class Recipe(
     val originalVideoUrl: String,
     val country: String,
     val numServings: Int,
-    val components: List<Component>,
-    val instructions: List<Instruction>,
+    val components: List<String>,
+    val instructions: List<String>,
     val nutrition: Nutrition?
 )

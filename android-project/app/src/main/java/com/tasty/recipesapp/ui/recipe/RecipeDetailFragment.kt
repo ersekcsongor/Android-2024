@@ -1,5 +1,6 @@
 package com.tasty.recipesapp.ui.recipe
 
+import RecipeDetailViewModelFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +14,6 @@ import com.bumptech.glide.Glide
 import com.tasty.recipesapp.databinding.FragmentRecipeDetailBinding
 import com.tasty.recipesapp.repository.RecipeRepository
 import com.tasty.recipesapp.viewmodel.RecipeDetailViewModel
-import com.tasty.recipesapp.viewmodel.RecipeDetailViewModelFactory
 
 class RecipeDetailFragment : Fragment() {
 
