@@ -1,34 +1,46 @@
 package com.tasty.recipesapp.viewmodel
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.tasty.recipesapp.entities.RecipeEntity
 import com.tasty.recipesapp.models.Recipe
 import com.tasty.recipesapp.repository.RecipeRepository2
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(private val repository: RecipeRepository2) : ViewModel() {
 
-    // Get all recipes from the Room database
-    fun getAllRecipes(): LiveData<List<Recipe>> = liveData {
-        emit(repository.getAllRecipes())
+    // A MutableStateFlow to hold the list of recipes
+    private val _recipes = MutableStateFlow<List<Recipe>>(emptyList())
+    val recipes: StateFlow<List<Recipe>> = _recipes
+
+    init {
+        // Get all recipes when ViewModel is created
+        getAllRecipes()
     }
 
+    // Get all recipes from the Room database
+    private fun getAllRecipes() {
+        viewModelScope.launch {
+            _recipes.value = repository.getAllRecipes()
+        }
+    }
+
+    // Insert a recipe into the database
     fun insertRecipe(recipe: RecipeEntity) {
-        // Launching the suspend function in a coroutine scope
         viewModelScope.launch {
             repository.insertRecipe(recipe)
+            getAllRecipes() // Refresh the list after insertion
         }
     }
 
     // Delete a recipe from the database
     fun deleteRecipe(recipe: RecipeEntity) {
-        // Launching the suspend function in a coroutine scope
         viewModelScope.launch {
             repository.deleteRecipe(recipe)
+            getAllRecipes() // Refresh the list after deletion
         }
     }
 }
