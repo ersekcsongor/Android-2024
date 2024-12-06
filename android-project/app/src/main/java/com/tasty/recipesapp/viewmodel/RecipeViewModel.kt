@@ -13,7 +13,6 @@ class RecipeListViewModel(private val repository: RecipeRepository) : ViewModel(
     private val _recipeList = MutableLiveData<List<Recipe>>()
     val recipeList: LiveData<List<Recipe>> get() = _recipeList
 
-    // Fetch data from the repository asynchronously
     fun fetchRecipeData() {
         viewModelScope.launch {
             _recipeList.value = repository.getRecipes()

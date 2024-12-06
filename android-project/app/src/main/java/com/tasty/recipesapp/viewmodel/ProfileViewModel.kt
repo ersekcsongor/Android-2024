@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tasty.recipesapp.entities.RecipeEntity
 import com.tasty.recipesapp.models.Recipe
+import com.tasty.recipesapp.models.RecipeModel
 import com.tasty.recipesapp.repository.RecipeRepository2
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,8 +14,8 @@ import kotlinx.coroutines.launch
 class ProfileViewModel(private val repository: RecipeRepository2) : ViewModel() {
 
     // A MutableStateFlow to hold the list of recipes
-    private val _recipes = MutableStateFlow<List<Recipe>>(emptyList())
-    val recipes: StateFlow<List<Recipe>> = _recipes
+    private val _recipes = MutableStateFlow<List<RecipeModel>>(emptyList())
+    val recipes: StateFlow<List<RecipeModel>> = _recipes
 
     init {
         // Get all recipes when ViewModel is created
