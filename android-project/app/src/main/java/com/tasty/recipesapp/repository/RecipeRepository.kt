@@ -4,7 +4,6 @@ import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.tasty.recipesapp.dtos.RecipeDTO
-import com.tasty.recipesapp.dtos.toModel
 import com.tasty.recipesapp.models.Recipe
 
 class RecipeRepository(private val context: Context) {
@@ -42,7 +41,6 @@ fun RecipeDTO.toModel(): Recipe {
         numServings = this.numServings,
         components = this.components ,// Convert ComponentDTO to Component
         instructions = this.instructions, // Convert InstructionDTO to Instruction
-        nutrition = this.nutrition?.toModel() // Convert NutritionDTO to Nutrition
 
 
     )

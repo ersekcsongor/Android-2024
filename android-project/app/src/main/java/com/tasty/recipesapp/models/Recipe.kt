@@ -1,6 +1,5 @@
 package com.tasty.recipesapp.models
 
-// Recipe.kt
 data class Recipe(
     val id: Int,
     val name: String,
@@ -14,5 +13,4 @@ data class Recipe(
     val numServings: Int,
     val components: List<String>,
     val instructions: List<String>,
-    val nutrition: Nutrition?
 )
