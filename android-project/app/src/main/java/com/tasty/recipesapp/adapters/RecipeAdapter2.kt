@@ -1,55 +1,62 @@
 package com.tasty.recipesapp.adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.tasty.recipesapp.R
-import com.tasty.recipesapp.entities.RecipeEntity
 import com.google.gson.Gson
+import com.tasty.recipesapp.databinding.ItemRecipeBinding
+import com.tasty.recipesapp.entities.RecipeEntity
 import com.tasty.recipesapp.models.RecipeModel
 
 class RecipeAdapter2(
-    private val recipes: List<RecipeEntity> // Pass the list of recipes to the adapter
+    recipes: List<RecipeEntity>, // Input as immutable list
+    private val onDelete: (RecipeEntity) -> Unit
 ) : RecyclerView.Adapter<RecipeAdapter2.RecipeViewHolder>() {
 
-    class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val nameTextView: TextView = itemView.findViewById(R.id.recipeName)
-        private val descriptionTextView: TextView = itemView.findViewById(R.id.recipeDescription)
-        private val detailsButton: Button = itemView.findViewById(R.id.detailsButton)
-        private val wishlistButton: Button = itemView.findViewById(R.id.wishlistButton)
-        private val recipeImage: ImageView = itemView.findViewById(R.id.recipeImage)
+    // Internal mutable copy of the recipe list
+    private val recipeList = recipes.toMutableList()
 
-        fun bind(recipeEntity: RecipeEntity) {
-            val recipeModel = Gson().fromJson(recipeEntity.json, RecipeModel::class.java)
-            nameTextView.text = recipeModel.name
-            descriptionTextView.text = recipeModel.description
+    inner class RecipeViewHolder(private val binding: ItemRecipeBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(recipe: RecipeEntity) {
+            try {
+                // Parse the JSON string into a RecipeData object
+                val recipeData = Gson().fromJson(recipe.json, RecipeModel::class.java)
 
-            // Optional: Handle button clicks
-            detailsButton.setOnClickListener {
-                // Handle details button action
-            }
-            wishlistButton.setOnClickListener {
-                // Handle wishlist button action
+                // Display the parsed name and description
+                binding.recipeName.text = recipeData.name
+                binding.recipeDescription.text = recipeData.description
+            } catch (e: Exception) {
+                // Handle JSON parsing errors (fallback to default text)
+                binding.recipeName.text = "Invalid Recipe"
+                binding.recipeDescription.text = "Error parsing recipe details."
             }
 
-            // Optional: Load an image into the ImageView (if applicable)
-            // Glide.with(itemView.context).load(recipeModel.imageUrl).into(recipeImage)
+            // Handle delete button click
+            binding.deleteButton.setOnClickListener {
+                onDelete(recipe) // Trigger deletion callback
+            }
         }
     }
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_recipe, parent, false)
-        return RecipeViewHolder(view)
+        val binding = ItemRecipeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return RecipeViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
-        val recipeEntity = recipes[position]
-        holder.bind(recipeEntity)
+        holder.bind(recipeList[position])
     }
 
-    override fun getItemCount(): Int = recipes.size
+    override fun getItemCount() = recipeList.size
+
+    // Method to remove a recipe
+    fun deleteRecipe(recipe: RecipeEntity) {
+        val index = recipeList.indexOf(recipe)
+        if (index != -1) {
+            recipeList.removeAt(index)
+            notifyItemRemoved(index)
+        }
+    }
 }
+

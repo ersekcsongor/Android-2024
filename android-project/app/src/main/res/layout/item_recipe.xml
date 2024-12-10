@@ -42,10 +42,10 @@ android:padding="8dp">
             android:layout_marginEnd="8dp"/> <!-- Optional margin between buttons -->
 
         <Button
-            android:id="@+id/wishlistButton"
+            android:id="@+id/deleteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/title_button2" />
+            android:text="Remove From List" />
 
     </LinearLayout>
 </LinearLayout>

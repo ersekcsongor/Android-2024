@@ -1,7 +1,6 @@
 package com.tasty.recipesapp.ui.profile
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,22 +31,39 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Fetch recipes from database
         val recipeDao = RecipeDatabase.getDatabase(requireContext()).recipeDao()
         lifecycleScope.launch {
-            val recipes = recipeDao.getAllRecipes() // Get the recipes from the database
+            val recipes = recipeDao.getAllRecipes() // Fetch recipes as an immutable list
 
-            // Set up RecyclerView and Adapter
-            recipeAdapter = RecipeAdapter2(recipes)
+            recipeAdapter = RecipeAdapter2(recipes) { recipe ->
+                lifecycleScope.launch {
+                    recipeDao.deleteRecipe(recipe) // Delete from the database
+                    recipeAdapter.deleteRecipe(recipe) // Update the adapter
+                }
+            }
             binding.recyclerView.apply {
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = recipeAdapter
             }
         }
 
-        // Handle Add Recipe button click
+
         binding.addRecipeButton.setOnClickListener {
             findNavController().navigate(R.id.newRecipesFragment)
+        }
+    }
+
+
+    private fun updateRecyclerView() {
+        lifecycleScope.launch {
+            val updatedRecipes = RecipeDatabase.getDatabase(requireContext()).recipeDao().getAllRecipes()
+            recipeAdapter = RecipeAdapter2(updatedRecipes) { recipeToDelete ->
+                lifecycleScope.launch {
+                    RecipeDatabase.getDatabase(requireContext()).recipeDao().deleteRecipe(recipeToDelete)
+                    updateRecyclerView()
+                }
+            }
+            binding.recyclerView.adapter = recipeAdapter
         }
     }
 
