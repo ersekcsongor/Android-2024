@@ -1,5 +1,7 @@
 package com.tasty.recipesapp.ui.recipe
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -76,12 +78,28 @@ class RecipeDetailsFragment2 : Fragment() {
         Glide.with(this)
             .load(recipeData.thumbnailUrl)
             .into(binding.recipeThumbnail)
+
+        if (!recipeData.originalVideoUrl.isNullOrEmpty()) {
+            binding.recipeVideoView.visibility = View.VISIBLE
+
+            // Make the video URL clickable
+            binding.recipeVideoView.setOnClickListener {
+                val intent = Intent(Intent.ACTION_VIEW).apply {
+                    data = Uri.parse(recipeData.originalVideoUrl)
+                }
+                startActivity(intent)
+            }
+        } else {
+            binding.recipeVideoView.visibility = View.GONE
+        }
     }
 
     private fun showError(message: String) {
         binding.recipeName.text = "Error"
         binding.recipeDescription.text = message
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()

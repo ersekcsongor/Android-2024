@@ -13,7 +13,6 @@ import com.tasty.recipesapp.R
 import com.tasty.recipesapp.adapters.RecipeAdapter2
 import com.tasty.recipesapp.databinding.FragmentProfileBinding
 import com.tasty.recipesapp.entities.RecipeDatabase
-import com.tasty.recipesapp.entities.RecipeEntity
 import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment() {
@@ -67,8 +66,8 @@ class ProfileFragment : Fragment() {
     }
 
     private fun navigateToRecipeDetail(recipeId: Long) {
-        val bundle = bundleOf("recipeId" to recipeId.toInt())
-        findNavController().navigate(R.id.recipeDetailFragment, bundle)
+        val bundle = bundleOf("recipeId" to recipeId)
+        findNavController().navigate(R.id.recipeDetailsFragment2, bundle)
     }
 
     override fun onDestroyView() {
