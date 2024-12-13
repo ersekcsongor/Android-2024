@@ -1,6 +1,7 @@
 package com.tasty.recipesapp.ui.recipe
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +22,7 @@ class RecipesFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val recipeViewModel: RecipeListViewModel by viewModels {
-        RecipeListViewModelFactory(requireContext())
+        RecipeListViewModelFactory()
     }
 
     override fun onCreateView(
@@ -35,21 +36,24 @@ class RecipesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Set up RecyclerView
         binding.recipeRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // Observe recipe list from ViewModel
-        recipeViewModel.recipeList.observe(viewLifecycleOwner) { recipes ->
-            val recipeAdapter = RecipeAdapter(
+        // Observe recipes
+        recipeViewModel.recipes.observe(viewLifecycleOwner) { recipes ->
+            binding.recipeRecyclerView.adapter = RecipeAdapter(
                 recipes,
                 onItemClick = { recipe -> navigateToRecipeDetail(recipe) },
                 onDetailsClick = { recipe -> navigateToRecipeDetail(recipe) }
             )
-            binding.recipeRecyclerView.adapter = recipeAdapter
+        }
+
+        // Observe raw JSON for debugging
+        recipeViewModel.rawJson.observe(viewLifecycleOwner) { json ->
+            Log.d("RecipesFragment", "Raw JSON: $json")
         }
 
         // Fetch recipes
-        recipeViewModel.fetchRecipeData()
+        recipeViewModel.getAllRecipesFromApi()
     }
 
     override fun onDestroyView() {
@@ -58,10 +62,9 @@ class RecipesFragment : Fragment() {
     }
 
     private fun navigateToRecipeDetail(recipe: Recipe) {
-        // Pass the recipe ID to the detail fragment
         findNavController().navigate(
             R.id.action_recipesFragment_to_recipeDetailFragment,
-            bundleOf("recipeId" to recipe.id)
+            bundleOf("recipeId" to recipe.recipeID)
         )
     }
 }

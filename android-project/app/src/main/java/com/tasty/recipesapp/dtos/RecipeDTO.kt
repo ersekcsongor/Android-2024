@@ -1,18 +1,25 @@
 package com.tasty.recipesapp.dtos
 
+import com.tasty.recipesapp.models.Component
+import com.tasty.recipesapp.models.Instruction
+import com.tasty.recipesapp.models.Nutrition
 
-data class RecipeDTO(
-    val recipeID: Int,
-    val name: String,
-    val description: String,
-    val thumbnailUrl: String,
-    val keywords: String,
-    val isPublic: Boolean,
-    val userEmail: String,
-    val originalVideoUrl: String,
-    val country: String,
-    val numServings: Int,
-    val components: List<String>,
-    val instructions: List<String>,
+data class RecipeDto(
+    val recipeID: Int?,                // Nullable
+    val name: String?,                 // Nullable
+    val description: String?,          // Nullable
+    val thumbnailUrl: String?,         // Nullable
+    val keywords: String?,             // CSV String, split into List<String>
+    val isPublic: Boolean?,            // Nullable
+    val userEmail: String?,            // Nullable
+    val originalVideoUrl: String?,     // Nullable
+    val country: String?,              // Nullable
+    val numServings: Int?,             // Nullable
+    val components: List<ComponentDTO>?,  // Nullable list
+    val instructions: List<InstructionDTO>?, // Nullable list
+    val nutrition: NutritionDTO?       // Nullable
 )
 
+data class RecipeResponse(
+    val recipes: List<RecipeDto>
+)

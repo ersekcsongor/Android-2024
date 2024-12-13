@@ -9,8 +9,8 @@ data class InstructionDTO(
 )
 fun InstructionDTO.toModel(): Instruction {
     return Instruction(
-        id = this.instructionID,
-        text = this.displayText,
+        instructionID = this.instructionID,
+        displayText = this.displayText,
         position = this.position
     )
 }

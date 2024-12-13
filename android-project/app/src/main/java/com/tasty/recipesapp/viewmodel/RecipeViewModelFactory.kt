@@ -3,16 +3,14 @@ package com.tasty.recipesapp.viewmodel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.tasty.recipesapp.repository.RecipeRepository
+import androidx.lifecycle.viewmodel.CreationExtras
 
-class RecipeListViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
-
+class RecipeListViewModelFactory() : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
         if (modelClass.isAssignableFrom(RecipeListViewModel::class.java)) {
-            val repository = RecipeRepository(context)
-            return RecipeListViewModel(repository) as T
+            return RecipeListViewModel() as T
         }
-        throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

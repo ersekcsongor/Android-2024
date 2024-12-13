@@ -2,7 +2,7 @@ package com.tasty.recipesapp.models
 
 // Instruction.kt
 data class Instruction(
-    val id: Int,
-    val text: String,
+    val instructionID: Int,
+    val displayText: String,
     val position: Int
 )
