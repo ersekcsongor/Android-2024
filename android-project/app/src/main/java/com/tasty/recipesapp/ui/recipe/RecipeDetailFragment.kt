@@ -1,5 +1,6 @@
 package com.tasty.recipesapp.ui.recipe
 
+import com.tasty.recipesapp.R
 import RecipeApiClient
 import android.content.Intent
 import android.net.Uri
@@ -68,6 +69,7 @@ class RecipeDetailFragment : Fragment() {
     }
 
     private fun bindRecipeData(recipe: Recipe) {
+        // Set Recipe Name and Description
         binding.recipeName.text = recipe.name
         binding.recipeDescription.text = recipe.description
 
@@ -75,20 +77,34 @@ class RecipeDetailFragment : Fragment() {
             .load(recipe.thumbnailUrl)
             .into(binding.recipeThumbnail)
 
+        // Display Video URL as a Video View or External Link
         if (!recipe.originalVideoUrl.isNullOrEmpty()) {
             binding.recipeVideoView.visibility = View.VISIBLE
-
-            // Make the video URL clickable
-            binding.recipeVideoView.setOnClickListener {
-                val intent = Intent(Intent.ACTION_VIEW).apply {
-                    data = Uri.parse(recipe.originalVideoUrl)
-                }
-                startActivity(intent)
-            }
+            binding.recipeVideoView.setVideoPath(recipe.originalVideoUrl)
+            binding.recipeVideoView.setOnPreparedListener { it.start() } // Autoplay on load
         } else {
             binding.recipeVideoView.visibility = View.GONE
         }
+
+        // Display Keywords if Available
+        if (!recipe.keywords.isNullOrEmpty()) {
+            binding.recipeKeywords.visibility = View.VISIBLE
+            binding.recipeKeywords.text = "Keywords: ${recipe.keywords}"
+        }
+
+        // Display Servings if Available
+        if (recipe.numServings > 0) {
+            binding.recipeServings.visibility = View.VISIBLE
+            binding.recipeServings.text = "Servings: ${recipe.numServings}"
+        }
+
+        // Display Country if Available
+        if (!recipe.country.isNullOrEmpty()) {
+            binding.recipeCountry.visibility = View.VISIBLE
+            binding.recipeCountry.text = "Country: ${recipe.country}"
+        }
     }
+
 
     private fun showError(message: String) {
         binding.recipeName.text = "Error"
